@@ -61,6 +61,14 @@ curl --location --request GET 'http://localhost:8080/api/urls'
 - 등록된 oriUrl, shortUrl, 요청 수를 조회합니다.
 
 
+### 테스트 결과
+
+<img width="449" alt="image" src="https://github.com/user-attachments/assets/45aa64bd-8188-4ba4-9269-2fa312afef1f" />
+
+- src/test/java/com/laundrygo/shorturl/service/UrlSerivceTest.java
+- 위 경로에 테스트 작성했습니다.
+
+
 ---
 ## 요구사항
 
