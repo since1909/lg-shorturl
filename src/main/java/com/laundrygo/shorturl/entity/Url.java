@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @Table(name = "lg_url")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Url {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
