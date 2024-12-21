@@ -67,7 +67,7 @@ class UrlSerivceTest {
     }
 
     @Test
-    @DisplayName("짧은 URL 생성 성공 테스트")
+    @DisplayName("단축 URL 생성 성공 테스트")
     public void createShortUrl() {
         // given
         String originalUrl = "www.new-url.com";
@@ -84,7 +84,7 @@ class UrlSerivceTest {
     }
 
     @Test
-    @DisplayName("짧은 URL 생성 성공 테스트: 중복 생성")
+    @DisplayName("단축 URL 생성 성공 테스트: 중복 생성")
     public void createExistShortUrl() {
         // given
         String originalUrl = "www.existing-url.com";
