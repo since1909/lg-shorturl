@@ -1,7 +1,9 @@
 package com.laundrygo.shorturl.service;
 
+import com.laundrygo.shorturl.dto.UrlResDto;
 import com.laundrygo.shorturl.entity.Url;
 import com.laundrygo.shorturl.exception.UrlNotFoundException;
+import com.laundrygo.shorturl.mapper.UrlMapper;
 import com.laundrygo.shorturl.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,18 +11,22 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UrlSerivce {
+    private final UrlMapper urlMapper;
     private final UrlRepository urlRepository;
     private final SecureRandom random = new SecureRandom();
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final String URL_POSTFIX = ".lg";
     private static final int SHORT_URL_LENGTH = 5;
 
-    public List<Url> getAllUrls() {
-        return urlRepository.findAll();
+    public List<UrlResDto> getAllUrls() {
+        return urlRepository.findAll().stream()
+                .map(urlMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional
