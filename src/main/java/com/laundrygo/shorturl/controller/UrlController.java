@@ -4,10 +4,7 @@ import com.laundrygo.shorturl.entity.Url;
 import com.laundrygo.shorturl.service.UrlSerivce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,9 +13,37 @@ public class UrlController {
 
     private final UrlSerivce urlSerivce;
 
-    @PostMapping
-    public ResponseEntity<String> createShortUrl(@RequestBody String originalUrl) {
-        Url url = urlSerivce.createShortUrl(originalUrl);
-        return ResponseEntity.ok(url.getShortUrl());
+    /**
+     * 전체 조회
+     *
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<?> getUrls() {
+        return ResponseEntity.ok(urlSerivce.getAllUrls());
     }
+
+    /**
+     * original url 조회
+     *
+     * @param shortUrl
+     * @return
+     */
+    @GetMapping("/{shortUrl}")
+    public ResponseEntity<?> getOriUrl(@PathVariable String shortUrl) {
+        return ResponseEntity.ok(urlSerivce.getOriUrl(shortUrl));
+    }
+
+    /**
+     * short url 생성
+     *
+     * @param originalUrl
+     * @return
+     */
+    @PostMapping
+    public ResponseEntity<?> createShortUrl(@RequestBody String originalUrl) {
+        return ResponseEntity.ok(urlSerivce.createShortUrl(originalUrl));
+    }
+
+
 }

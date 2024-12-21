@@ -1,11 +1,14 @@
 package com.laundrygo.shorturl.service;
 
 import com.laundrygo.shorturl.entity.Url;
+import com.laundrygo.shorturl.exception.UrlNotFoundException;
 import com.laundrygo.shorturl.repository.UrlRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,15 +19,29 @@ public class UrlSerivce {
     private static final String URL_POSTFIX = ".lg";
     private static final int SHORT_URL_LENGTH = 5;
 
-    public Url createShortUrl(String originalUrl) {
-        return urlRepository.findByOriginalUrl(originalUrl)
+    public List<Url> getAllUrls() {
+        return urlRepository.findAll();
+    }
+
+    @Transactional
+    public String getOriUrl(String shortUrl) {
+        Url url = urlRepository.findByShortUrl(shortUrl)
+                .orElseThrow(() -> new UrlNotFoundException("Short URL not found: " + shortUrl));
+        url.setRequestCount(url.getRequestCount() + 1);
+        return url.getOriginalUrl();
+    }
+
+    @Transactional
+    public String createShortUrl(String originalUrl) {
+        Url url = urlRepository.findByOriginalUrl(originalUrl)
                 .orElseGet(() -> {
                     String shortUrl = generateUniqueShortUrl();
-                    Url url = new Url();
-                    url.setOriginalUrl(originalUrl);
-                    url.setShortUrl(shortUrl);
-                    return urlRepository.save(url);
+                    Url newUrl = new Url();
+                    newUrl.setOriginalUrl(originalUrl);
+                    newUrl.setShortUrl(shortUrl);
+                    return urlRepository.save(newUrl);
                 });
+        return url.getShortUrl();
     }
 
     private String generateUniqueShortUrl() {
@@ -40,6 +57,6 @@ public class UrlSerivce {
         for (int i = 0; i < SHORT_URL_LENGTH; i++) {
             shortUrl.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
         }
-        return shortUrl.toString() + URL_POSTFIX;
+        return shortUrl.append(URL_POSTFIX).toString();
     }
 }
